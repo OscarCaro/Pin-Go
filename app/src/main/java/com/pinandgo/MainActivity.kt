@@ -1,9 +1,14 @@
 package com.pinandgo
 
+import android.app.ActivityManager
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,22 +18,24 @@ class MainActivity : AppCompatActivity() {
         val textView : TextView = findViewById(R.id.text)
 
         when {
-            intent?.action == Intent.ACTION_SEND -> {
-                if ("text/plain" == intent.type) {
-                    //handleSendText(intent) // Handle text being sent
-                    textView.text = intent.getStringExtra(Intent.EXTRA_TEXT)
-                } else if (intent.type?.startsWith("image/") == true) {
-                    //handleSendImage(intent) // Handle single image being sent
+            intent?.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {
+
+                try{
+                    val pin = Pin(intent.getStringExtra(Intent.EXTRA_TEXT))
+                    textView.text = "$pin.link $pin.domain"
+
+                    textView.setOnClickListener{
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(pin.link)
+                        startActivity(intent)
+                    }
+                } catch (e: Exception){
+                    Toast.makeText(this, "Error loading data from intent", Toast.LENGTH_LONG).show()
                 }
-            }
-            intent?.action == Intent.ACTION_SEND_MULTIPLE && intent.type?.startsWith("image/") == true -> {
-                //handleSendMultipleImages(intent) // Handle multiple images being sent
             }
             else -> {
                 // Handle other intents, such as being started from the home screen
             }
         }
-
-
     }
 }

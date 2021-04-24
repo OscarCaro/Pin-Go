@@ -15,27 +15,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val textView : TextView = findViewById(R.id.text)
+        val text : TextView = findViewById(R.id.text)
 
-        when {
-            intent?.action == Intent.ACTION_SEND && intent.type == "text/plain" -> {
+        text.text = PinList.getInstance(this)[0].link       // Todo: delete
 
-                try{
-                    val pin = Pin(intent.getStringExtra(Intent.EXTRA_TEXT))
-                    textView.text = "$pin.link $pin.domain"
-
-                    textView.setOnClickListener{
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(pin.link)
-                        startActivity(intent)
-                    }
-                } catch (e: Exception){
-                    Toast.makeText(this, "Error loading data from intent", Toast.LENGTH_LONG).show()
-                }
-            }
-            else -> {
-                // Handle other intents, such as being started from the home screen
-            }
-        }
     }
 }

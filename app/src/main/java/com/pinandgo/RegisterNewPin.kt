@@ -28,8 +28,7 @@ class RegisterNewPin : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                PinList.getInstance(this).add(pin)
-                PinList.getInstance(this).save(this)
+                PinList.add(pin, this)
 
             } catch (e: Exception){
                 Toast.makeText(this, "Error loading data from intent", Toast.LENGTH_LONG).show()

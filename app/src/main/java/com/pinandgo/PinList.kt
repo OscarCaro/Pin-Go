@@ -7,22 +7,28 @@ import java.lang.Exception
 
 const val KEY : String = "sharedPreferencesKey"
 
-class PinList : ArrayList<Pin>() {
+// OBJECT = default Kotlin implementation of Singleton pattern
+object PinList {
 
-    // Singleton implementation
-    companion object{
-        @Volatile private var INSTANCE : PinList? = null
+    private lateinit var list : ArrayList<Pin>
 
-        fun getInstance(context: Context) : PinList =
-            INSTANCE ?: synchronized(this){
-                INSTANCE ?: PinList().also { INSTANCE = it; it.load(context) }
-            }
+    fun add(pin: Pin, context: Context){
+        checkLoad(context)
+        list.add(pin)
     }
 
-    // Must be called after changes on list (add pin, remove pin, etc)
-    fun save(context : Context){
+    fun get(position : Int, context: Context): Pin {
+        checkLoad(context)
+        return list[position]
+    }
+
+    fun size (context: Context) : Int{
+        return list.size
+    }
+
+    private fun save(context : Context){
         val array = JSONArray()
-        for (pin in this ){
+        for (pin in list){
             array.put(pin.toJson())
         }
 
@@ -30,17 +36,19 @@ class PinList : ArrayList<Pin>() {
         prefs.edit().putString(KEY, array.toString()).apply()
     }
 
-    private fun load(context: Context){
-        try{
-            val prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
-            val array = JSONArray(prefs.getString(KEY, JSONArray().toString()))
+    @Synchronized private fun checkLoad(context: Context){
+        if (!::list.isInitialized){
+            try{
+                val prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
+                val array = JSONArray(prefs.getString(KEY, JSONArray().toString()))
 
-            for(i in 0 until array.length()){
-                this.add(Pin(array.optJSONObject(i)))
+                for(i in 0 until array.length()){
+                    list.add(Pin(array.optJSONObject(i)))
+                }
             }
-        }
-        catch (e : Exception){
-            Toast.makeText(context, "Error loading pins from memory", Toast.LENGTH_SHORT).show()
+            catch (e : Exception){
+                Toast.makeText(context, "Error loading pins from memory", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

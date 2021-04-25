@@ -15,6 +15,7 @@ object PinList {
     fun add(pin: Pin, context: Context){
         checkLoad(context)
         list.add(pin)
+        save(context)
     }
 
     fun get(position : Int, context: Context): Pin {
@@ -23,10 +24,11 @@ object PinList {
     }
 
     fun size (context: Context) : Int{
+        checkLoad(context)
         return list.size
     }
 
-    private fun save(context : Context){
+    @Synchronized private fun save(context : Context){
         val array = JSONArray()
         for (pin in list){
             array.put(pin.toJson())
@@ -39,6 +41,8 @@ object PinList {
     @Synchronized private fun checkLoad(context: Context){
         if (!::list.isInitialized){
             try{
+                list = ArrayList()
+                
                 val prefs = context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
                 val array = JSONArray(prefs.getString(KEY, JSONArray().toString()))
 

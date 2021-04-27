@@ -5,8 +5,10 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,6 +36,7 @@ class RegisterNewPin : AppCompatActivity() {
 
         val text1 : TextView = findViewById(R.id.text1)
         val text2 : TextView = findViewById(R.id.text2)
+        val imageView : ImageView = findViewById(R.id.image)
 
         if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
             try{
@@ -59,7 +62,16 @@ class RegisterNewPin : AppCompatActivity() {
                         fromJSONResponse(result)
                     }
                     text1.text = result
+
+                    Glide.with(applicationContext)
+                            .load(result)
+                            .placeholder(R.drawable.ic_launcher_foreground)
+                            .fitCenter()
+                            .into(imageView)
+
                 }
+
+
 
                 ///////////////////////////////////
 
@@ -80,7 +92,7 @@ class RegisterNewPin : AppCompatActivity() {
             val imageURL : String = data.getString("image")
             val url : String = data.getString("url")
 
-            return title + "\n" + description + "\n" + imageURL + "\n" + url
+            return imageURL
         }
         catch(e:Exception){
             Toast.makeText(this, "Error using API", Toast.LENGTH_SHORT).show()

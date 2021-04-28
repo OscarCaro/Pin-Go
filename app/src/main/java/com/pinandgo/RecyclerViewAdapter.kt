@@ -22,12 +22,12 @@ class RecyclerViewAdapter(private val listSize : Int) : RecyclerView.Adapter<Rec
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pin = PinList.get(position, holder.itemView.context)
-        holder.linkTextView.text = pin.link
+        holder.linkTextView.text = pin.intentUrl
         holder.domainTextView.text = pin.domain
 
         holder.linkTextView.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(pin.link)
+            intent.data = Uri.parse(pin.intentUrl)
             holder.itemView.context.startActivity(intent)
         }
     }

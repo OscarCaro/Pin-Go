@@ -4,6 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import org.json.JSONArray
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 const val KEY : String = "sharedPreferencesKey"
 
@@ -28,6 +30,11 @@ object PinList {
         return list.size
     }
 
+    fun sortByDate(ascending: Boolean){
+        if (ascending) list.sortBy { it.date }
+        else list.sortByDescending { it.date }
+    }
+
     @Synchronized private fun save(context : Context){
         val array = JSONArray()
         for (pin in list){
@@ -49,6 +56,7 @@ object PinList {
                 for(i in 0 until array.length()){
                     list.add(Pin(array.optJSONObject(i)))
                 }
+                sortByDate(false)
             }
             catch (e : Exception){
                 Toast.makeText(context, "Error loading pins from memory", Toast.LENGTH_SHORT).show()

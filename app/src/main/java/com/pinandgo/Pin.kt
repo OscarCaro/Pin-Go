@@ -10,6 +10,10 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
 const val JSON_INTENT_URL = "link"
@@ -17,6 +21,7 @@ const val JSON_DOMAIN = "domain"
 const val JSON_TITLE = "title"
 const val JSON_DESC = "desc"
 const val JSON_IMAGE_URL = "image"
+const val JSON_DATE = "date"
 
 const val QUERY_BASE_URL = "https://api.linkpreview.net"
 const val QUERY_KEY = "key"
@@ -29,6 +34,7 @@ class Pin {
     var domain : String
     var title : String
     var description : String
+    var date : Date
     var imageUrl : String
 
     // Constructor from JSONObject of SharedPrefs
@@ -38,6 +44,7 @@ class Pin {
         title = json.getString(JSON_TITLE)
         description = json.getString(JSON_DESC)
         imageUrl = json.getString(JSON_IMAGE_URL)
+        date = Date(json.getLong(JSON_DATE))
     }
 
     // Constructor from received intent -> Perform load of data using HTTPS
@@ -54,6 +61,7 @@ class Pin {
         title = json.getString("title")
         description = json.getString("description")
         imageUrl = json.getString("image")
+        date = Calendar.getInstance().time
     }
 
     // Pin -> JSONObject for SharedPrefs
@@ -64,6 +72,7 @@ class Pin {
         json.put(JSON_TITLE, title)
         json.put(JSON_DESC, description)
         json.put(JSON_IMAGE_URL, imageUrl)
+        json.put(JSON_DATE, date.time)
         return json
     }
 

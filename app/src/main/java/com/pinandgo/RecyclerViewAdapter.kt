@@ -9,6 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RecyclerViewAdapter(private val listSize : Int) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
@@ -16,6 +19,7 @@ class RecyclerViewAdapter(private val listSize : Int) : RecyclerView.Adapter<Rec
         val textTitle : TextView = view.findViewById(R.id.textTitle)
         val textDesc : TextView = view.findViewById(R.id.textDesc)
         val textDomain : TextView = view.findViewById(R.id.textDomain)
+        val textDate : TextView = view.findViewById(R.id.textDate)
         val imageView : ImageView = view.findViewById(R.id.image)
     }
 
@@ -29,6 +33,7 @@ class RecyclerViewAdapter(private val listSize : Int) : RecyclerView.Adapter<Rec
         holder.textTitle.text = pin.title
         holder.textDesc.text = pin.description
         holder.textDomain.text = pin.domain
+        holder.textDate.text = SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(pin.date).toString()
 
         Glide.with(holder.itemView.context)
             .load(pin.imageUrl)

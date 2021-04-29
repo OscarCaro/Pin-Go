@@ -35,6 +35,15 @@ object PinList {
         else list.sortByDescending { it.date }
     }
 
+    fun moveFavsToTop(){
+        var newIdx = 0;
+        for (i in list.indices){
+            if (list[i].fav){
+                list.add(newIdx++, list.removeAt(i))
+            }
+        }
+    }
+
     @Synchronized private fun save(context : Context){
         val array = JSONArray()
         for (pin in list){
@@ -56,7 +65,8 @@ object PinList {
                 for(i in 0 until array.length()){
                     list.add(Pin(array.optJSONObject(i)))
                 }
-                sortByDate(false)
+                sortByDate(true)
+                moveFavsToTop()
             }
             catch (e : Exception){
                 Toast.makeText(context, "Error loading pins from memory", Toast.LENGTH_SHORT).show()

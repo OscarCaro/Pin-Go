@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_list"
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:title="@string/first_action" />
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="@string/second_action" />
+
+    <item
+        android:id="@+id/action_folder"
+        android:icon="@drawable/ic_baseline_grid_on_24"
+        android:title="@string/third_action" />
+
+
+</menu>

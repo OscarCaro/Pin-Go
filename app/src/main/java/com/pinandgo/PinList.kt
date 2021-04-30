@@ -1,14 +1,18 @@
 package com.pinandgo
 
 import android.content.Context
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.Toast
 import org.json.JSONArray
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 const val KEY : String = "sharedPreferencesKey"
 
 // OBJECT = default Kotlin implementation of Singleton pattern
-object PinList {
+object PinList{
 
     private lateinit var list : ArrayList<Pin>
 
@@ -23,9 +27,46 @@ object PinList {
         return list[position]
     }
 
+    fun getList(context: Context) : ArrayList<Pin>{
+        checkLoad(context)
+        return list
+    }
+
+    fun getSortedList(context: Context, query: CharSequence?) : ArrayList<Pin>{
+        checkLoad(context)
+        return if (query?.toString()?.isNotEmpty() == true){
+            val filteredList = ArrayList<Pin>()
+            val searchTerm = query.toString().toLowerCase(Locale.ROOT)
+            for (pin in list){
+                if (pin.title.toLowerCase(Locale.ROOT).contains(searchTerm)
+                    || pin.description.toLowerCase(Locale.ROOT).contains(searchTerm)
+                    || pin.domain.toLowerCase(Locale.ROOT).contains(searchTerm)){
+                    filteredList.add(pin)
+                }
+            }
+            filteredList
+        } else{
+            list
+        }
+    }
+
     fun size (context: Context) : Int{
         checkLoad(context)
         return list.size
+    }
+
+    fun sortByDate(ascending: Boolean){
+        if (ascending) list.sortBy { it.date }
+        else list.sortByDescending { it.date }
+    }
+
+    fun moveFavsToTop(){
+        var newIdx = 0;
+        for (i in list.indices){
+            if (list[i].fav){
+                list.add(newIdx++, list.removeAt(i))
+            }
+        }
     }
 
     @Synchronized private fun save(context : Context){
@@ -49,11 +90,16 @@ object PinList {
                 for(i in 0 until array.length()){
                     list.add(Pin(array.optJSONObject(i)))
                 }
+                sortByDate(true)
+                moveFavsToTop()
             }
             catch (e : Exception){
                 Toast.makeText(context, "Error loading pins from memory", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+
+
 
 }

@@ -1,6 +1,8 @@
 package com.pinandgo
 
 import android.content.Context
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.Toast
 import org.json.JSONArray
 import java.lang.Exception
@@ -10,7 +12,7 @@ import kotlin.collections.ArrayList
 const val KEY : String = "sharedPreferencesKey"
 
 // OBJECT = default Kotlin implementation of Singleton pattern
-object PinList {
+object PinList{
 
     private lateinit var list : ArrayList<Pin>
 
@@ -23,6 +25,29 @@ object PinList {
     fun get(position : Int, context: Context): Pin {
         checkLoad(context)
         return list[position]
+    }
+
+    fun getList(context: Context) : ArrayList<Pin>{
+        checkLoad(context)
+        return list
+    }
+
+    fun getSortedList(context: Context, query: CharSequence?) : ArrayList<Pin>{
+        checkLoad(context)
+        return if (query?.toString()?.isNotEmpty() == true){
+            val filteredList = ArrayList<Pin>()
+            val searchTerm = query.toString().toLowerCase(Locale.ROOT)
+            for (pin in list){
+                if (pin.title.toLowerCase(Locale.ROOT).contains(searchTerm)
+                    || pin.description.toLowerCase(Locale.ROOT).contains(searchTerm)
+                    || pin.domain.toLowerCase(Locale.ROOT).contains(searchTerm)){
+                    filteredList.add(pin)
+                }
+            }
+            filteredList
+        } else{
+            list
+        }
     }
 
     fun size (context: Context) : Int{
@@ -73,5 +98,8 @@ object PinList {
             }
         }
     }
+
+
+
 
 }

@@ -15,10 +15,6 @@ const val BUNDLE_RECYCLER_VIEW = "rec_view"
 
 class ListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ListFragment()
-    }
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchEditText: EditText
 
@@ -48,14 +44,6 @@ class ListFragment : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-
-        if(savedInstanceState != null){
-            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_RECYCLER_VIEW))
-        }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         if(savedInstanceState != null){
             recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_RECYCLER_VIEW))

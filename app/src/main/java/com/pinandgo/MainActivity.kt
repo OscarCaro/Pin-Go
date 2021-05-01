@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,6 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigation : BottomNavigationView
+    private val listFragment = ListFragment()
+    private val addFragment = ListFragment()
+    private val folderFragment = ListFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +31,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_nav_view)
         bottomNavigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.action_list -> changeScreen()
-                R.id.action_add -> changeScreen()
-                R.id.action_folder -> changeScreen()
+                R.id.action_list -> changeScreen(listFragment)
+                R.id.action_add -> changeScreen(addFragment)
+                R.id.action_folder -> changeScreen(folderFragment)
             }
             true
         }
@@ -37,8 +41,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.selectedItemId = R.id.action_list
     }
 
-    private fun changeScreen() {
-        val frag = ListFragment.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, frag).commit()
+    private fun changeScreen(fragment : Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 }

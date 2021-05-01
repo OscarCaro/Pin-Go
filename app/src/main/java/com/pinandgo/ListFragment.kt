@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
+const val BUNDLE_RECYCLER_VIEW = "rec_view"
+
 class ListFragment : Fragment() {
 
     companion object {
-        fun newInstance(args: Bundle) = ListFragment().apply {
-            arguments = args
-        }
+        fun newInstance() = ListFragment()
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -38,6 +38,27 @@ class ListFragment : Fragment() {
 
         searchEditText.doOnTextChanged{ charSequence: CharSequence?, i: Int, i1: Int, i2: Int ->
             adapter.filter.filter(charSequence)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(BUNDLE_RECYCLER_VIEW, recyclerView.layoutManager?.onSaveInstanceState())
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        if(savedInstanceState != null){
+            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_RECYCLER_VIEW))
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        if(savedInstanceState != null){
+            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_RECYCLER_VIEW))
         }
     }
 

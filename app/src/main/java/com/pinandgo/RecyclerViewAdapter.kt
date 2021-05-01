@@ -72,4 +72,6 @@ class RecyclerViewAdapter(private var list: ArrayList<Pin>, private val context:
         }
     }
 
+
+
 }

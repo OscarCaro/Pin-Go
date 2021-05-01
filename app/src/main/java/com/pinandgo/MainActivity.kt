@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeScreen() {
-        val frag = ListFragment.newInstance(Bundle())
+        val frag = ListFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, frag).commit()
     }
 }

@@ -1,19 +1,10 @@
 package com.pinandgo
 
-import android.app.ActivityManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -21,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigation : BottomNavigationView
     private val listFragment = ListFragment()
-    private val addFragment = ListFragment()
+    private val addFragment = AddPinFragment()
     private val folderFragment = FoldersFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,15 +29,18 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        bottomNavigation.selectedItemId = R.id.action_list
-
-        // TODO: handle received intent and pass link to fragment
-//        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
-//          val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
-//        }
-//        else {
-//            Toast.makeText(requireContext(), "We cannot handle this media type", Toast.LENGTH_LONG).show()
-//        }
+        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
+            val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
+            addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
+            bottomNavigation.selectedItemId = R.id.action_add
+        }
+        else if (intent?.action == Intent.ACTION_SEND){
+            Toast.makeText(this, "We cannot handle this media type", Toast.LENGTH_LONG).show()
+            bottomNavigation.selectedItemId = R.id.action_list
+        }
+        else{
+            bottomNavigation.selectedItemId = R.id.action_list
+        }
     }
 
     private fun changeScreen(fragment : Fragment) {

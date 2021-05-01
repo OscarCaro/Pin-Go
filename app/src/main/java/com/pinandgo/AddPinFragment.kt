@@ -2,35 +2,24 @@ package com.pinandgo
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.net.ssl.HttpsURLConnection
-import kotlin.system.exitProcess
 
 const val BUNDLE_INTENT_LINK = "intent_link"
 
-class RegisterNewPin : Fragment() {
+class AddPinFragment : Fragment() {
 
     private lateinit var textTitle : TextView
     private lateinit var textDesc : TextView
@@ -45,7 +34,7 @@ class RegisterNewPin : Fragment() {
     private lateinit var buttonGroup: ConstraintLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_register_new_pin, container, false)
+        return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,6 +49,8 @@ class RegisterNewPin : Fragment() {
         deleteButton = view.findViewById(R.id.button_delete)
         favoriteButton = view.findViewById(R.id.button_favorite)
         shareButton = view.findViewById(R.id.button_share)
+        progressBar = view.findViewById(R.id.progress_bar)
+        buttonGroup = view.findViewById(R.id.button_group)
 
         val intentLink : String? = arguments?.getString(BUNDLE_INTENT_LINK)
 

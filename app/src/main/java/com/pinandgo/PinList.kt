@@ -8,6 +8,7 @@ import org.json.JSONArray
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 const val KEY : String = "sharedPreferencesKey"
 
@@ -50,9 +51,13 @@ object PinList{
         }
     }
 
-    fun size (context: Context) : Int{
-        checkLoad(context)
-        return list.size
+    fun getMappedList() : HashMap<String, ArrayList<Pin>>{
+        val map = HashMap<String, ArrayList<Pin>>()
+        for (pin in list){
+            val currList = map.get(pin.domain) ?: ArrayList<Pin>().apply { map.put(pin.domain, this) }
+            currList.add(pin)
+        }
+        return map
     }
 
     fun sortByDate(ascending: Boolean){
@@ -98,8 +103,4 @@ object PinList{
             }
         }
     }
-
-
-
-
 }

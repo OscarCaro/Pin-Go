@@ -23,6 +23,7 @@ const val JSON_DESC = "desc"
 const val JSON_DATE = "date"
 const val JSON_FAV = "fav"
 const val JSON_IMAGE_URL = "image"
+const val JSON_DOMAIN_IMAGE_URL = "domain_image"
 
 const val QUERY_BASE_URL = "https://api.linkpreview.net"
 const val QUERY_KEY = "key"
@@ -38,6 +39,7 @@ class Pin {
     var date : Date
     var fav : Boolean
     var imageUrl : String
+    var domainImageUrl : String
 
     // Constructor from JSONObject of SharedPrefs
     constructor(json : JSONObject) {
@@ -48,6 +50,7 @@ class Pin {
         date = Date(json.getLong(JSON_DATE))
         fav = json.getBoolean(JSON_FAV)
         imageUrl = json.getString(JSON_IMAGE_URL)
+        domainImageUrl = json.getString(JSON_DOMAIN_IMAGE_URL)
     }
 
     // Constructor from received intent -> Perform load of data using HTTPS
@@ -60,12 +63,19 @@ class Pin {
         // May throw exception (if string is null) -> to be caught by caller
         val json = JSONObject(connResultStr!!)
         intentUrl = url
-        domain = URL(intentUrl).host
+        val tmp = URL(intentUrl).host
+        domain = if (tmp.startsWith("www.")) tmp.substring(4) else tmp;
         title = json.getString("title")
         description = json.getString("description")
         imageUrl = json.getString("image")
         date = Calendar.getInstance().time
         fav = false
+
+        val domainConnResultStr : String? = connection(domain)
+
+        // May throw exception (if string is null) -> to be caught by caller
+        val domainJson = JSONObject(domainConnResultStr!!)
+        domainImageUrl = domainJson.getString("image")
     }
 
     // Pin -> JSONObject for SharedPrefs
@@ -78,6 +88,7 @@ class Pin {
         json.put(JSON_DATE, date.time)
         json.put(JSON_FAV, fav)
         json.put(JSON_IMAGE_URL, imageUrl)
+        json.put(JSON_DOMAIN_IMAGE_URL, domainImageUrl)
         return json
     }
 

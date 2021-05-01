@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-const val BUNDLE_RECYCLER_VIEW = "rec_view"
+const val LIST_BUNDLE_RECYCLER_VIEW = "list_rec_view"
 
 class ListFragment : Fragment() {
 
@@ -39,14 +39,13 @@ class ListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(BUNDLE_RECYCLER_VIEW, recyclerView.layoutManager?.onSaveInstanceState())
+        outState.putParcelable(LIST_BUNDLE_RECYCLER_VIEW, recyclerView.layoutManager?.onSaveInstanceState())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-
         if(savedInstanceState != null){
-            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_RECYCLER_VIEW))
+            recyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_BUNDLE_RECYCLER_VIEW))
         }
     }
 

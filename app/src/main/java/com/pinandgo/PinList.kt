@@ -51,7 +51,8 @@ object PinList{
         }
     }
 
-    fun getMappedList() : HashMap<String, ArrayList<Pin>>{
+    fun getMappedList(context: Context) : HashMap<String, ArrayList<Pin>>{
+        checkLoad(context)
         val map = HashMap<String, ArrayList<Pin>>()
         for (pin in list){
             val currList = map.get(pin.domain) ?: ArrayList<Pin>().apply { map.put(pin.domain, this) }

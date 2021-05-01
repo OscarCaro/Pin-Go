@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigation : BottomNavigationView
     private val listFragment = ListFragment()
     private val addFragment = ListFragment()
-    private val folderFragment = ListFragment()
+    private val folderFragment = FoldersFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

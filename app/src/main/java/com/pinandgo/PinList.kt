@@ -23,9 +23,21 @@ object PinList{
         save(context)
     }
 
+    fun delete(pin: Pin, context: Context){
+        checkLoad(context)
+        list.remove(pin)
+        save(context)
+    }
+
     fun get(position : Int, context: Context): Pin {
         checkLoad(context)
         return list[position]
+    }
+
+    fun changeFav(isFav : Boolean, pin: Pin, context: Context){
+        checkLoad(context)
+        list[list.indexOf(pin)].fav = isFav
+        save(context)
     }
 
     fun getList(context: Context) : ArrayList<Pin>{

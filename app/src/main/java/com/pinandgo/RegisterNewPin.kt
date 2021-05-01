@@ -18,6 +18,8 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
 class RegisterNewPin : AppCompatActivity() {
@@ -26,11 +28,10 @@ class RegisterNewPin : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_new_pin)
 
-        val textIntentURL : TextView = findViewById(R.id.textIntentURL)
-        val textDomain : TextView = findViewById(R.id.textDomain)
         val textTitle : TextView = findViewById(R.id.textTitle)
         val textDesc : TextView = findViewById(R.id.textDesc)
-        val textImageURL : TextView = findViewById(R.id.textImageURL)
+        val textDomain : TextView = findViewById(R.id.textDomain)
+        val textDate : TextView = findViewById(R.id.textDate)
         val imageView : ImageView = findViewById(R.id.image)
 
         if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
@@ -41,24 +42,18 @@ class RegisterNewPin : AppCompatActivity() {
                         Pin(link)           // Throw exception if null -> catch and warn user
                     }
 
-                    textIntentURL.text = pin.intentUrl
+                    textTitle.text = pin.title.capitalize(Locale.ROOT)
+                    textDesc.text = pin.description.capitalize(Locale.ROOT)
                     textDomain.text = pin.domain
-                    textTitle.text = pin.title
-                    textDesc.text = pin.description
-                    textImageURL.text = pin.imageUrl
-
-                    textIntentURL.setOnClickListener{
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(pin.intentUrl)
-                        startActivity(intent)
-                    }
-
-                    PinList.add(pin, applicationContext)
+                    textDate.text = SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(pin.date).toString()
 
                     Glide.with(applicationContext)
                         .load(pin.imageUrl)
-                        .fitCenter()
+                        .circleCrop()
                         .into(imageView)
+
+                    PinList.add(pin, applicationContext)
+
                 } catch (e: Exception){
                     Toast.makeText(applicationContext, "Error loading data from intent", Toast.LENGTH_LONG).show()
                 }

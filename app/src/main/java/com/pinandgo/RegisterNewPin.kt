@@ -5,9 +5,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,91 +28,113 @@ import java.util.*
 import javax.net.ssl.HttpsURLConnection
 import kotlin.system.exitProcess
 
-class RegisterNewPin : AppCompatActivity() {
+const val BUNDLE_INTENT_LINK = "intent_link"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register_new_pin)
+class RegisterNewPin : Fragment() {
 
-        val textTitle : TextView = findViewById(R.id.textTitle)
-        val textDesc : TextView = findViewById(R.id.textDesc)
-        val textDomain : TextView = findViewById(R.id.textDomain)
-        val textDate : TextView = findViewById(R.id.textDate)
-        val imageView : ImageView = findViewById(R.id.image)
-        val openButton : ImageButton = findViewById(R.id.button_open)
-        val deleteButton : ImageButton = findViewById(R.id.button_delete)
-        val favoriteButton : ImageButton = findViewById(R.id.button_favorite)
-        val shareButton : ImageButton = findViewById(R.id.button_share)
+    private lateinit var textTitle : TextView
+    private lateinit var textDesc : TextView
+    private lateinit var textDomain : TextView
+    private lateinit var textDate : TextView
+    private lateinit var imageView : ImageView
+    private lateinit var openButton : ImageButton
+    private lateinit var deleteButton : ImageButton
+    private lateinit var favoriteButton : ImageButton
+    private lateinit var shareButton : ImageButton
+    private lateinit var progressBar: ProgressBar
+    private lateinit var buttonGroup: ConstraintLayout
 
-        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
-            GlobalScope.launch(Dispatchers.Main) {
-                try{
-                    val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
-                    val pin : Pin = withContext(Dispatchers.IO){
-                        Pin(link)           // Throw exception if null -> catch and warn user
-                    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.activity_register_new_pin, container, false)
+    }
 
-                    textTitle.text = pin.title.capitalize(Locale.ROOT)
-                    textDesc.text = pin.description.capitalize(Locale.ROOT)
-                    textDomain.text = pin.domain
-                    textDate.text = SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(pin.date).toString()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-                    Glide.with(applicationContext)
-                        .load(pin.imageUrl)
-                        .circleCrop()
-                        .into(imageView)
+        textTitle = view.findViewById(R.id.textTitle)
+        textDesc = view.findViewById(R.id.textDesc)
+        textDomain = view.findViewById(R.id.textDomain)
+        textDate= view.findViewById(R.id.textDate)
+        imageView = view.findViewById(R.id.image)
+        openButton = view.findViewById(R.id.button_open)
+        deleteButton = view.findViewById(R.id.button_delete)
+        favoriteButton = view.findViewById(R.id.button_favorite)
+        shareButton = view.findViewById(R.id.button_share)
 
+        val intentLink : String? = arguments?.getString(BUNDLE_INTENT_LINK)
+
+        if (intentLink != null){
+            handleIntent(intentLink)
+        }
+        else{
+            //Display editText to enter link and then handle intent
+        }
+    }
+
+    private fun handleIntent(link : String){
+        GlobalScope.launch(Dispatchers.Main) {
+            try{
+                val pin : Pin = withContext(Dispatchers.IO){
+                    Pin(link)           // Throw exception if null -> catch and warn user
+                }
+
+                textTitle.text = pin.title.capitalize(Locale.ROOT)
+                textDesc.text = pin.description.capitalize(Locale.ROOT)
+                textDomain.text = pin.domain
+                textDate.text = SimpleDateFormat("HH:mm dd MMMM", Locale.getDefault()).format(pin.date).toString()
+
+                Glide.with(requireContext())
+                    .load(pin.imageUrl)
+                    .circleCrop()
+                    .into(imageView)
+
+                if (pin.fav){
+                    favoriteButton.setImageResource(R.drawable.ic_baseline_star_24)
+                }
+                else{
+                    favoriteButton.setImageResource(R.drawable.ic_baseline_star_border_24)
+                }
+
+                PinList.add(pin, requireContext())
+
+                openButton.setOnClickListener{
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(pin.intentUrl)
+                    startActivity(intent)
+                }
+
+                deleteButton.setOnClickListener{
+                    PinList.delete(pin, requireContext())
+                    // TODO: exit app
+                }
+
+                favoriteButton.setOnClickListener{
                     if (pin.fav){
-                        favoriteButton.setImageResource(R.drawable.ic_baseline_star_24)
-                    }
-                    else{
+                        PinList.changeFav(false, pin, requireContext())
                         favoriteButton.setImageResource(R.drawable.ic_baseline_star_border_24)
                     }
-
-                    PinList.add(pin, applicationContext)
-
-                    openButton.setOnClickListener{
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(pin.intentUrl)
-                        startActivity(intent)
+                    else{
+                        PinList.changeFav(true, pin, requireContext())
+                        favoriteButton.setImageResource(R.drawable.ic_baseline_star_24)
                     }
-
-                    deleteButton.setOnClickListener{
-                        PinList.delete(pin, applicationContext)
-                        finish()
-                    }
-
-                    favoriteButton.setOnClickListener{
-                        if (pin.fav){
-                            PinList.changeFav(false, pin, applicationContext)
-                            favoriteButton.setImageResource(R.drawable.ic_baseline_star_border_24)
-                        }
-                        else{
-                            PinList.changeFav(true, pin, applicationContext)
-                            favoriteButton.setImageResource(R.drawable.ic_baseline_star_24)
-                        }
-                    }
-
-                    shareButton.setOnClickListener{
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, pin.intentUrl)
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        startActivity(shareIntent)
-                    }
-
-                    findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
-                    findViewById<ConstraintLayout>(R.id.button_group).visibility = View.VISIBLE
-
-                } catch (e: Exception){
-                    Toast.makeText(applicationContext, "Error loading data from intent", Toast.LENGTH_LONG).show()
                 }
+
+                shareButton.setOnClickListener{
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, pin.intentUrl)
+                        type = "text/plain"
+                    }
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                }
+
+                progressBar.visibility = View.GONE
+                buttonGroup.visibility = View.VISIBLE
+
+            } catch (e: Exception){
+                Toast.makeText(requireContext(), "Error loading data from intent", Toast.LENGTH_LONG).show()
             }
-        }
-        else {
-            Toast.makeText(this, "We cannot handle this media type", Toast.LENGTH_LONG).show()
         }
     }
 }

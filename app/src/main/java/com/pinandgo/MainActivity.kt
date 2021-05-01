@@ -39,6 +39,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         bottomNavigation.selectedItemId = R.id.action_list
+
+        // TODO: handle received intent and pass link to fragment
+//        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
+//          val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
+//        }
+//        else {
+//            Toast.makeText(requireContext(), "We cannot handle this media type", Toast.LENGTH_LONG).show()
+//        }
     }
 
     private fun changeScreen(fragment : Fragment) {

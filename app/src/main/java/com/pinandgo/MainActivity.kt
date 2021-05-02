@@ -21,6 +21,17 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigation = findViewById(R.id.bottom_nav_view)
         bottomNavigation.setOnNavigationItemSelectedListener {
+
+            if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
+                val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
+                addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
+            }
+            else{
+                addFragment.arguments = null
+            }
+
+            intent = null   // To process it only once
+
             when(it.itemId){
                 R.id.action_list -> changeScreen(listFragment)
                 R.id.action_add -> changeScreen(addFragment)
@@ -28,10 +39,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+    }
 
-        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
-            val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
-            addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
+    override fun onResume() {
+        super.onResume()
+        if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
             bottomNavigation.selectedItemId = R.id.action_add
         }
         else if (intent?.action == Intent.ACTION_SEND){

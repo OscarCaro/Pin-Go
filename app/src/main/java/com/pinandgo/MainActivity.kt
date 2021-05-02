@@ -67,10 +67,4 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
-    override fun onStop() {
-        // TODO: maybe change to onStop
-        super.onStop()
-        getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().remove(PREFS_SELEC_FRAG).apply()
-    }
-
 }

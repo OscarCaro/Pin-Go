@@ -24,38 +24,38 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_nav_view)
         bottomNavigation.setOnNavigationItemSelectedListener {
 
-            if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
-                val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
-                addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
-            }
-            else{
-                addFragment.arguments = null
-            }
-
-            intent = null   // To process it only once
-
-            getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().putInt(PREFS_SELEC_FRAG, it.itemId).apply()
-
             when(it.itemId){
                 R.id.action_list -> changeScreen(listFragment)
                 R.id.action_add -> changeScreen(addFragment)
                 R.id.action_folder -> changeScreen(folderFragment)
             }
+
+            val prefs = getSharedPreferences(KEY, Context.MODE_PRIVATE)
+            prefs.edit().putInt(PREFS_SELEC_FRAG, it.itemId).apply()
+
             true
         }
-
-        bottomNavigation.selectedItemId = getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).getInt(PREFS_SELEC_FRAG, R.id.action_list)
     }
 
     override fun onResume() {
         super.onResume()
         if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
+            val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
+            addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
             bottomNavigation.selectedItemId = R.id.action_add
         }
         else if (intent?.action == Intent.ACTION_SEND){
             Toast.makeText(this, "We cannot handle this media type", Toast.LENGTH_LONG).show()
+            addFragment.arguments = null
             bottomNavigation.selectedItemId = R.id.action_list
         }
+        else{
+            addFragment.arguments = null
+            val prefs = getSharedPreferences(KEY, Context.MODE_PRIVATE)
+            bottomNavigation.selectedItemId = prefs.getInt(PREFS_SELEC_FRAG, R.id.action_list)
+        }
+
+        intent = null   // To process it only once
     }
 
     private fun changeScreen(fragment : Fragment) {
@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        // TODO: maybe change to onStop
         super.onDestroy()
         getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().remove(PREFS_SELEC_FRAG).apply()
     }

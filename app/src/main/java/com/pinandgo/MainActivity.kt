@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        bottomNavigation.selectedItemId = R.id.action_list
     }
 
     override fun onResume() {
@@ -48,9 +50,6 @@ class MainActivity : AppCompatActivity() {
         }
         else if (intent?.action == Intent.ACTION_SEND){
             Toast.makeText(this, "We cannot handle this media type", Toast.LENGTH_LONG).show()
-            bottomNavigation.selectedItemId = R.id.action_list
-        }
-        else{
             bottomNavigation.selectedItemId = R.id.action_list
         }
     }

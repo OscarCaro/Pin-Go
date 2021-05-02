@@ -1,5 +1,6 @@
 package com.pinandgo
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+const val PREFS_SELEC_FRAG = "sel_frag"
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
             intent = null   // To process it only once
 
+            getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().putInt(PREFS_SELEC_FRAG, it.itemId).apply()
+
             when(it.itemId){
                 R.id.action_list -> changeScreen(listFragment)
                 R.id.action_add -> changeScreen(addFragment)
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        bottomNavigation.selectedItemId = R.id.action_list
+        bottomNavigation.selectedItemId = getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).getInt(PREFS_SELEC_FRAG, R.id.action_list)
     }
 
     override fun onResume() {
@@ -57,4 +61,10 @@ class MainActivity : AppCompatActivity() {
     private fun changeScreen(fragment : Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().remove(PREFS_SELEC_FRAG).apply()
+    }
+
 }

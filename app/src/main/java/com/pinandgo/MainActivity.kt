@@ -24,6 +24,17 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_nav_view)
         bottomNavigation.setOnNavigationItemSelectedListener {
 
+            if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
+                val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
+                addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
+            }
+            else{
+                addFragment.arguments = null
+            }
+
+            intent?.action = null
+            intent = null   // To process it only once
+
             when(it.itemId){
                 R.id.action_list -> changeScreen(listFragment)
                 R.id.action_add -> changeScreen(addFragment)
@@ -40,31 +51,25 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain"){
-            val link = intent.getStringExtra(Intent.EXTRA_TEXT)!!
-            addFragment.arguments = Bundle().apply { this.putString(BUNDLE_INTENT_LINK, link) }
             bottomNavigation.selectedItemId = R.id.action_add
         }
         else if (intent?.action == Intent.ACTION_SEND){
             Toast.makeText(this, "We cannot handle this media type", Toast.LENGTH_LONG).show()
-            addFragment.arguments = null
             bottomNavigation.selectedItemId = R.id.action_list
         }
         else{
-            addFragment.arguments = null
             val prefs = getSharedPreferences(KEY, Context.MODE_PRIVATE)
             bottomNavigation.selectedItemId = prefs.getInt(PREFS_SELEC_FRAG, R.id.action_list)
         }
-
-        intent = null   // To process it only once
     }
 
     private fun changeScreen(fragment : Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         // TODO: maybe change to onStop
-        super.onDestroy()
+        super.onStop()
         getSharedPreferences(PREFS_SELEC_FRAG, Context.MODE_PRIVATE).edit().remove(PREFS_SELEC_FRAG).apply()
     }
 

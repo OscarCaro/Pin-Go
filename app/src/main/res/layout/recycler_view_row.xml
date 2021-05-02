@@ -12,7 +12,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/textDomain"
         app:layout_constraintLeft_toLeftOf="parent"
         />
 
@@ -22,13 +22,23 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/image"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/symbol_fav"
         android:maxLines="1"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="2dp"
         android:textSize="16sp"
         android:textColor="@color/black"
         android:layout_marginTop="2dp"
+        />
+
+    <ImageView
+        android:id="@+id/symbol_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/textTitle"
+        app:layout_constraintBottom_toBottomOf="@id/textTitle"
+        android:src="@drawable/ic_baseline_star_24"
+        app:layout_constraintRight_toRightOf="parent"
         />
 
     <TextView
@@ -51,7 +61,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/textDesc"
         app:layout_constraintLeft_toRightOf="@id/image"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/textDate"
         android:maxLines="1"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="2dp"
@@ -61,10 +71,10 @@
 
     <TextView
         android:id="@+id/textDate"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textDomain"
-        app:layout_constraintLeft_toRightOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@id/textDesc"
+        app:layout_constraintLeft_toRightOf="@id/textDomain"
         app:layout_constraintRight_toRightOf="parent"
         android:maxLines="1"
         android:layout_marginStart="8dp"
@@ -72,5 +82,56 @@
         android:textSize="13sp"
         android:layout_marginTop="2dp"
         />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/button_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textDate"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        >
+
+        <ImageButton
+            android:id="@+id/button_open"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/button_delete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_open_in_new_24"
+            />
+
+        <ImageButton
+            android:id="@+id/button_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/button_open"
+            app:layout_constraintRight_toLeftOf="@id/button_favorite"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_delete_24"
+            />
+
+        <ImageButton
+            android:id="@+id/button_favorite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/button_delete"
+            app:layout_constraintRight_toLeftOf="@id/button_share"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_star_border_24"
+            />
+
+        <ImageButton
+            android:id="@+id/button_share"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/button_favorite"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_share_24"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

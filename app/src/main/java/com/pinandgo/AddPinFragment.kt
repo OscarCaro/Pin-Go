@@ -136,7 +136,8 @@ class AddPinFragment : Fragment() {
 
                 deleteButton.setOnClickListener{
                     PinList.delete(pin, requireContext())
-                    // TODO: exit app
+                    resultGroup.visibility = View.GONE
+                    inputGroup.visibility = View.VISIBLE
                 }
 
                 favoriteButton.setOnClickListener{

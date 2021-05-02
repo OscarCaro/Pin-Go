@@ -10,16 +10,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 const val PREFS_SELEC_FRAG = "sel_frag"
 
+const val LIST_FRAG_TAG = "list"
+const val ADD_FRAG_TAG = "add"
+const val FOLDER_FRAG_TAG = "folder"
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigation : BottomNavigationView
-    private val listFragment = ListFragment()
-    private val addFragment = AddPinFragment()
-    private val folderFragment = FoldersFragment()
+    private lateinit var listFragment : Fragment
+    private lateinit var addFragment : Fragment
+    private lateinit var folderFragment : Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        listFragment = supportFragmentManager.findFragmentByTag(LIST_FRAG_TAG) ?: ListFragment()
+        addFragment = supportFragmentManager.findFragmentByTag(ADD_FRAG_TAG) ?: AddPinFragment()
+        folderFragment = supportFragmentManager.findFragmentByTag(FOLDER_FRAG_TAG) ?: FoldersFragment()
 
         bottomNavigation = findViewById(R.id.bottom_nav_view)
         bottomNavigation.setOnNavigationItemSelectedListener {
@@ -36,9 +45,9 @@ class MainActivity : AppCompatActivity() {
             intent = null   // To process it only once
 
             when(it.itemId){
-                R.id.action_list -> changeScreen(listFragment)
-                R.id.action_add -> changeScreen(addFragment)
-                R.id.action_folder -> changeScreen(folderFragment)
+                R.id.action_list -> changeScreen(listFragment, LIST_FRAG_TAG)
+                R.id.action_add -> changeScreen(addFragment, ADD_FRAG_TAG)
+                R.id.action_folder -> changeScreen(folderFragment, FOLDER_FRAG_TAG)
             }
 
             val prefs = getSharedPreferences(KEY, Context.MODE_PRIVATE)
@@ -63,8 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeScreen(fragment : Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
+    private fun changeScreen(fragment : Fragment, tag: String) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment, tag).commit()
     }
 
 }

@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FolderRecyclerViewAdapter(private var map: HashMap<String, ArrayList<Pin>>, private val context: Context,)
+class FolderRecyclerViewAdapter(private var map: HashMap<String, ArrayList<Pin>>, private val fragment: FoldersFragment)
     : RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder>(){
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -39,11 +39,9 @@ class FolderRecyclerViewAdapter(private var map: HashMap<String, ArrayList<Pin>>
             .into(holder.imageView)
         //TODO: loading wheel placeholder and NoIntenet placeholder
 
-//        holder.itemView.setOnClickListener{
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.data = Uri.parse(pin.intentUrl)
-//            holder.itemView.context.startActivity(intent)
-//        }
+        holder.itemView.setOnClickListener{
+            fragment.onFolderClicked(domain)
+        }
     }
 
     override fun getItemCount(): Int {

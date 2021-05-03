@@ -52,6 +52,11 @@ class FoldersFragment : Fragment() {
         if(selectedFolder != ""){
             onFolderClicked(selectedFolder)
         }
+
+        buttonBack.setOnClickListener{
+            detailGroup.visibility = View.GONE
+            foldersRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     fun onFolderClicked(folderName: String){
@@ -73,13 +78,5 @@ class FoldersFragment : Fragment() {
         outState.putParcelable(FOLDER_BUNDLE_RECYCLER_VIEW, foldersRecyclerView.layoutManager?.onSaveInstanceState())
         outState.putString(FOLDER_BUNDLE_NAME, title.text.toString())
     }
-//
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        if(savedInstanceState != null){
-//            foldersRecyclerView.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable(FOLDER_BUNDLE_RECYCLER_VIEW))
-//        }
-//    }
-
 
 }

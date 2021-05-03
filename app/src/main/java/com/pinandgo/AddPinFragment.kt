@@ -83,9 +83,9 @@ class AddPinFragment : Fragment() {
         if (intentLink != null){                 // Process incoming intent
             handleIntent(intentLink)
         }
-        else if (savedInstanceState != null){    // Handle device rotation -> repopulate with previous data
-
-        }
+//        else if (savedInstanceState != null){    // Handle device rotation -> repopulate with previous data
+//
+//        }
         else{                                    // User clicked on navigation bar -> show inputText
             inputGroup.visibility = View.VISIBLE
             resultGroup.visibility = View.GONE

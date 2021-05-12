@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pin&amp;Go</string>
+
+    <!-- Menu -->
+    <string name="first_action">List</string>
+    <string name="second_action">Add</string>
+    <string name="third_action">Folders</string>
+
+    <!-- List Fragment -->
+    <string name="list_frag_search_icon_desc">Search icon</string>
+    <string name="list_frag_search_hint">Search</string>
+
+    <!-- Add Pin Fragment -->
+    <string name="add_frag_search_hint">Introduce a link</string>
+    <string name="add_frag_search">Search</string>
+
+    <!-- Folder Fragment -->
+    <string name="folder_frag_back_btn_desc">Go back</string>
+
+    <!-- RecyclerView -->
+    <string name="rec_view_image_desc">Link image</string>
+    <string name="rec_view_fav_icon_desc">Favourite link</string>
+    <string name="rec_view_open_btn_desc">Open link</string>
+    <string name="rec_view_delete_btn_desc">Delete link</string>
+    <string name="rec_view_fav_btn_desc">Add link to favourites</string>
+    <string name="rec_view_share_btn_desc">Share link</string>
+
+</resources>

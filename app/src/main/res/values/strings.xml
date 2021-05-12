@@ -1,10 +1,28 @@
 <resources>
     <string name="app_name">Pin&amp;Go</string>
 
+    <!-- Menu -->
     <string name="first_action">Lista</string>
     <string name="second_action">Añadir</string>
     <string name="third_action">Carpetas</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- List Fragment -->
+    <string name="list_frag_search_icon_desc">Icono de busqueda</string>
+    <string name="list_frag_search_hint">Buscar</string>
+
+    <!-- Add Pin Fragment -->
+    <string name="add_frag_search_hint">Introduce un link</string>
+    <string name="add_frag_search">Buscar</string>
+
+    <!-- Folder Fragment -->
+    <string name="folder_frag_back_btn_desc">Atrás</string>
+
+    <!-- RecyclerView -->
+    <string name="rec_view_image_desc">Imagen del link</string>
+    <string name="rec_view_fav_icon_desc">Link favorito</string>
+    <string name="rec_view_open_btn_desc">Abrir link</string>
+    <string name="rec_view_delete_btn_desc">Eliminar link</string>
+    <string name="rec_view_fav_btn_desc">Añadir link a favoritos</string>
+    <string name="rec_view_share_btn_desc">Compartir link</string>
 
 </resources>
